@@ -1,0 +1,14 @@
+# Run artifacts — recordings, audit logs, notes, screenshots (regenerated per run)
+runs/
+*.log
+*.png
+
+# Caches
+.pytest_cache/
+__pycache__/
+
+# Large downloaded / generated data (re-fetchable from the source in PAYLOADS.md)
+browsesafe/browsesafe_test.parquet
+browsesafe/renders/
+browsesafe/samples/
+browsesafe/site_check/
