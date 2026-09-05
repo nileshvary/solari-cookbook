@@ -2,6 +2,7 @@
 runs/
 *.log
 *.png
+brief.txt          # written by demo_dryrun.py
 
 # Caches
 .pytest_cache/

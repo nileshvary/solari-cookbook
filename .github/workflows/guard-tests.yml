@@ -1,0 +1,28 @@
+name: guard-tests
+
+# Runs the Guard's policy unit tests. These are pure and dependency-free — no API
+# keys, no network, no Solari session — so the security boundary is verified on
+# every change to the example.
+
+on:
+  push:
+    paths:
+      - "examples/guarded-desktop-agent/**"
+      - ".github/workflows/guard-tests.yml"
+  pull_request:
+    paths:
+      - "examples/guarded-desktop-agent/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pytest
+        run: pip install pytest
+      - name: Run Guard policy unit tests
+        working-directory: examples/guarded-desktop-agent
+        run: python -m pytest test_guard.py -q

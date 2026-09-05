@@ -1,0 +1,16 @@
+# Core runtime for the recorded demo (run_moltbook_live.py / run_guarded.py)
+httpx>=0.27          # calls the vision model (Groq, OpenAI-compatible endpoint)
+pillow>=10.0         # downscales screenshots to fit the model's token limits
+solari-desktop>=0.1  # the Solari cloud desktop client
+
+# The Guard itself (guard.py) and the offline dry run (demo_dryrun.py) need
+# NOTHING beyond the Python standard library.
+
+# --- Optional extras -------------------------------------------------------
+# google-genai>=0.3   # alternative vision brain: BRAIN_PROVIDER=gemini
+# truststore>=0.9     # verify TLS via the OS trust store (corporate proxies)
+# pandas>=2.0         # offline red-team data prep (browsesafe/)
+# playwright>=1.40    # offline page render checks (browsesafe/)
+
+# --- Dev -------------------------------------------------------------------
+# pytest>=7.0         # run the Guard policy unit tests: pytest test_guard.py

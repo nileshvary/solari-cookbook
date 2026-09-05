@@ -1,5 +1,9 @@
 # Guarded Desktop Agent
 
+[![guard-tests](https://github.com/nileshvary/solari-cookbook/actions/workflows/guard-tests.yml/badge.svg)](https://github.com/nileshvary/solari-cookbook/actions/workflows/guard-tests.yml)
+![python](https://img.shields.io/badge/python-3.10%2B-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+
 **A least-privilege security layer for autonomous computer-use agents on a Solari cloud desktop.**
 
 An autonomous vision agent drives a real Chrome browser on a [Solari](https://getsolari.com)
@@ -56,6 +60,26 @@ flowchart LR
 The agent runs a classic **perceive → decide → act** loop. The Guard is a mediator on the
 *act* edge: no navigation or file write reaches the desktop until the policy approves it, and
 **every** decision — allow or deny — is emitted to a live feed and appended to an audit log.
+
+## Quickstart — try the Guard in 5 seconds, no keys
+
+The Guard is pure Python. See it allow, block, and audit with **no API keys, no Solari
+session, no model** — a scripted brain drives the loop:
+
+```bash
+python demo_dryrun.py
+```
+
+```
+   GUARD  [18:05:19]  visit  en.wikipedia.org        ALLOWED
+   GUARD  [18:05:19]  visit  ads.tracker.example     BLOCKED  (not on the approved list)
+   GUARD  [18:05:19]  save   brief.txt               ALLOWED
+   ...
+   guard summary: {'total': 3, 'allowed': 2, 'blocked': 1}
+```
+
+That is the whole security model, verifiable offline. The rest of this repo is what it looks
+like driving a *real* agent on a *real* desktop against *real* sites.
 
 ## The threat it addresses
 
@@ -169,19 +193,43 @@ demo, the agent is *instructed* to attempt the off-site step; the security value
 **Guard denying it**, not the agent misbehaving on its own. What it proves: *when an agent
 tries to leave its approved site, a simple allowlist stops it — visibly and provably.*
 
-## What's in here
+## Demos
 
-| File | Role |
-|------|------|
-| `guard.py` | **The Guard** — pure, dependency-free allowlist + audit. Unit-tested. |
-| `brain.py` | The agent's **vision brain** — a thin, swappable model (Groq / Gemini) returning one move from a screenshot. |
-| `solari_computer.py` | The agent's **eyes and hands** on the Solari desktop (screenshot, navigate, scroll, type) + the live Guard console. |
-| `worker.py` | The agent's move/state types and the guarded work loop. |
-| `run_moltbook_live.py` | The headline demo (research → brief → real-site block), recorded. |
-| `run_guarded.py` | The **generic** guarded research runner (`--topic/--start/--allow`). |
-| `run_redteam_demo.py` | Runs the agent against **real** BrowseSafe-Bench injection pages. |
-| `test_guard.py` | Policy unit tests (allow/deny, subdomains, look-alikes, path traversal). |
-| `PAYLOADS.md` | Exactly which real attack samples are used, and their source. |
+| Command | What it shows | Needs |
+|---|---|---|
+| `python demo_dryrun.py` | The Guard allow / block / audit end to end, offline | nothing |
+| `python run_moltbook_live.py` | Headline: agent researches moltbook.com, writes a brief, then is **blocked** leaving to twitter.com — live + recorded | Solari + vision key |
+| `python run_guarded.py --topic ... --start ... --allow ...` | The **generic** guarded research agent on any allowlisted site | Solari + vision key |
+| `python run_redteam_demo.py` | The agent against **real** BrowseSafe-Bench prompt-injection pages | Solari + vision key |
+
+## Project structure
+
+```
+guarded-desktop-agent/
+├── guard.py              # The Guard — allowlist + audit (pure, unit-tested)
+├── brain.py              # Vision brain — one move from a screenshot (Groq / Gemini)
+├── worker.py             # Agent move/state types + the guarded work loop
+├── computer.py           # The Computer interface (Dry / Solari / Local backends)
+├── solari_computer.py    # Solari desktop backend + the live Guard console
+├── run_moltbook_live.py  # Headline recorded demo
+├── run_guarded.py        # Generic guarded runner (--topic / --start / --allow)
+├── run_redteam_demo.py   # BrowseSafe-Bench red-team runs
+├── demo_dryrun.py        # Offline, no-keys quickstart
+├── test_guard.py         # Guard policy unit tests
+├── requirements.txt
+├── PAYLOADS.md           # Which real attack samples are used, and their source
+└── browsesafe/           # Red-team data prep + block page
+```
+
+## Tests
+
+The security boundary is unit-tested with no agent, browser, or model:
+
+```bash
+pytest test_guard.py     # allow/deny, subdomains, look-alikes, path traversal
+```
+
+CI runs these on every change (see the badge at the top).
 
 ## Run it
 
@@ -192,7 +240,7 @@ Requires Python 3.10+ and a Solari API key (plus a vision-model key for the agen
 #   SOLARI_API_KEY=slr_...      # https://console.getsolari.com
 #   GROQ_API_KEY=gsk_...        # the agent's vision brain (https://console.groq.com)
 
-pip install httpx pillow solari-desktop   # plus solari-browser for the offline checks
+pip install -r requirements.txt
 python run_moltbook_live.py               # the recorded demo
 ```
 
