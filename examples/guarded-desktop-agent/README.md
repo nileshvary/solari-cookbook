@@ -82,12 +82,14 @@ navigation is off the allowlist, so the Guard refused it, showed the exact URL +
 pulled the agent back to moltbook. The decision is in the audit log:
 `[00:54:33] visit twitter.com BLOCKED (off moltbook - ...)`.
 
-## Quickstart — try the Guard in 5 seconds, no keys
+## Quickstart — try the Guard, no keys
 
 The Guard is pure Python. See it allow, block, and audit with **no API keys, no Solari
-session, no model** — a scripted brain drives the loop:
+session, no model** — a scripted brain drives the loop. You only need **Python 3.10+**:
 
 ```bash
+git clone https://github.com/nileshvary/solari-cookbook
+cd solari-cookbook/examples/guarded-desktop-agent
 python demo_dryrun.py
 ```
 
