@@ -32,6 +32,7 @@ past. Copy one into your project and change the parts you care about.
 | Example | Language | What it shows |
 | --- | --- | --- |
 | [desktop-computer-use-py](examples/desktop-computer-use-py) | Python | Screenshot, click, and type on a Linux GUI |
+| [guarded-desktop-agent](examples/guarded-desktop-agent) | Python | Least-privilege guard + audit for a computer-use agent |
 
 ## Running an example
 
