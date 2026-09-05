@@ -133,8 +133,8 @@ Policy(
 - **Every** decision is recorded: `[00:54:33] visit twitter.com BLOCKED (off moltbook …)`, and
   the same line is appended to `runs/*_audit.jsonl` — a receipt of exactly what the agent did.
 
-`guard.py` is pure and dependency-free on purpose, and unit-tested (see [Tests](#tests)).
-A rule you can prove beats a model you can only hope about.
+`guard.py` is pure and dependency-free on purpose, and unit-tested. A rule you can prove
+beats a model you can only hope about.
 
 ## The demo — `run_moltbook_live.py`
 
@@ -207,24 +207,6 @@ no service, no `npx` — it is ~120 lines of standard-library Python.
 | **T-4** Confused agent burns credit | **MITIGATED** — hard step cap + per-session timeout + `finally` teardown |
 | **Residual** | the demo's block page loads the real site briefly before the pull-back (detect-and-enforce, not prevent-before-load) |
 
-## Honest scope
-
-This is **action-level** policy enforcement — it vets the visits and saves the agent makes
-*through the computer interface*, which is how this agent acts. It is **not** a network- or
-kernel-level sandbox and does not contain code executing outside the agent's browser. In the
-demo, the agent is *instructed* to attempt the off-site step; the security value is the
-**Guard denying it**, not the agent misbehaving on its own. What it proves: *when an agent
-tries to leave its approved site, a simple allowlist stops it — visibly and provably.*
-
-## Demos
-
-| Command | What it shows | Needs |
-|---|---|---|
-| `python demo_dryrun.py` | The Guard allow / block / audit end to end, offline | nothing |
-| `python run_moltbook_live.py` | Headline: agent researches moltbook.com, writes a brief, then is **blocked** leaving to twitter.com — live + recorded | Solari + vision key |
-| `python run_guarded.py --topic ... --start ... --allow ...` | The **generic** guarded research agent on any allowlisted site | Solari + vision key |
-| `python run_redteam_demo.py` | The agent against **real** BrowseSafe-Bench prompt-injection pages | Solari + vision key |
-
 ## Project structure
 
 ```
@@ -234,7 +216,7 @@ guarded-desktop-agent/
 ├── worker.py             # Agent move/state types + the guarded work loop
 ├── computer.py           # The Computer interface (Dry / Solari / Local backends)
 ├── solari_computer.py    # Solari desktop backend + the live Guard console
-├── run_moltbook_live.py  # Headline recorded demo
+├── run_moltbook_live.py  # Headline demo (recorded)
 ├── run_guarded.py        # Generic guarded runner (--topic / --start / --allow)
 ├── run_redteam_demo.py   # BrowseSafe-Bench red-team runs
 ├── demo_dryrun.py        # Offline, no-keys quickstart
@@ -244,35 +226,31 @@ guarded-desktop-agent/
 └── browsesafe/           # Red-team data prep + block page
 ```
 
-## Tests
+## Notes and limits
 
-The security boundary is unit-tested with no agent, browser, or model:
+- **Action-level, not a sandbox.** The Guard vets the visits and saves the agent makes
+  through the computer interface; it is not a network- or kernel-level containment boundary,
+  and does not contain code running outside the agent's browser.
+- **The leave is instructed.** In the demo the agent is told to attempt the off-site step —
+  the security value is the Guard *denying* it, not the agent going rogue. What it proves:
+  when an agent tries to leave its approved site, a simple allowlist stops it, visibly and
+  provably.
+- **Detect and enforce.** The blocked site loads for a moment before the agent is pulled back;
+  the navigation is refused and logged either way.
+- **Free-tier brain.** The vision model runs on Groq's free tier (per-minute / per-day token
+  caps); long runs pace themselves, and a heavy day may need a fresh key.
+
+## Scripts
+
+Add your keys to `.env` (`SOLARI_API_KEY`, `GROQ_API_KEY`), then `pip install -r requirements.txt`.
+The offline dry run needs neither.
 
 ```bash
-pytest test_guard.py     # allow/deny, subdomains, look-alikes, path traversal
+python demo_dryrun.py         # Guard allow / block / audit, offline, no keys
+python run_moltbook_live.py   # the recorded moltbook demo (live + mp4)
+python run_guarded.py --allow SITE --start URL --topic "..."   # generic guarded agent
+python run_redteam_demo.py    # agent vs. real BrowseSafe-Bench injection pages
+pytest test_guard.py          # Guard policy unit tests
 ```
 
-CI runs these on every change (see the badge at the top).
-
-## Run it
-
-Requires Python 3.10+ and a Solari API key (plus a vision-model key for the agent's brain).
-
-```bash
-# keys go in a .env in this folder (or the sibling agent-security-range/.env):
-#   SOLARI_API_KEY=slr_...      # https://console.getsolari.com
-#   GROQ_API_KEY=gsk_...        # the agent's vision brain (https://console.groq.com)
-
-pip install -r requirements.txt
-python run_moltbook_live.py               # the recorded demo
-```
-
-The script prints a **LIVE VIEW** URL (console.getsolari.com → Desktops) and saves the
-recording to `runs/moltbook_demo.mp4`.
-
-## Credits
-
-Built on the [Solari cookbook](https://github.com/solari-sdk/solari-cookbook). Red-team pages
-from Perplexity's [BrowseSafe-Bench](https://huggingface.co/datasets/perplexity-ai/browsesafe-bench)
-(MIT). Built with AI (Claude). Secrets are never committed — `.env` and all run artifacts are
-gitignored.
+<p align="center">Built with <a href="https://getsolari.com">Solari</a> · Public sources only</p>
