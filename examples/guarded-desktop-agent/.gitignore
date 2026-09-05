@@ -1,8 +1,12 @@
-# Run artifacts — recordings, audit logs, notes, screenshots (regenerated per run)
+# Run artifacts - recordings, audit logs, notes, screenshots (regenerated per run)
 runs/
 *.log
 *.png
-brief.txt          # written by demo_dryrun.py
+# ...but keep the README screenshots in docs/
+!docs/*.png
+
+# demo_dryrun.py writes this
+brief.txt
 
 # Caches
 .pytest_cache/

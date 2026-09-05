@@ -36,7 +36,7 @@ VM_SAVE_DIR = "/tmp/agent-out"
 SITE = "moltbook.com"
 HOME = "https://www.moltbook.com/"
 EXTERNAL = "https://twitter.com/login"  # moltbook's "verify on X" off-site lure
-DENY = "off moltbook — the agent may only browse moltbook.com; it cannot sign in or post on other sites, or leak data"
+DENY = "off moltbook - the agent may only browse moltbook.com; it cannot sign in or post on other sites, or leak data"
 
 TASK = (
     "You are researching Moltbook, a public social network where AI agents post and "
@@ -126,12 +126,12 @@ async def main() -> None:
                 await computer.preview_and_go(url, dwell=2.4)
                 # 2) The Guard's refusal as a NATIVE desktop dialog, not a web page.
                 notice = (
-                    "⛔  BLOCKED BY THE GUARD\n\n"
+                    "***  BLOCKED BY THE GUARD  ***\n\n"
                     f"The agent tried to leave to:\n    {url}\n\n"
                     f"Reason:\n    {reason}\n\n"
                     "The guarded agent may only browse moltbook.com. This\n"
                     "destination is off the approved list, so the navigation was\n"
-                    "refused — the agent stays on moltbook and cannot sign in,\n"
+                    "refused - the agent stays on moltbook and cannot sign in,\n"
                     "post, or leak data."
                 )
                 await desktop.fs.write("/tmp/blocked.txt", notice)

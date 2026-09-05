@@ -61,6 +61,27 @@ The agent runs a classic **perceive → decide → act** loop. The Guard is a me
 *act* edge: no navigation or file write reaches the desktop until the policy approves it, and
 **every** decision — allow or deny — is emitted to a live feed and appended to an audit log.
 
+## See it in action
+
+Real frames from the recorded run (`run_moltbook_live.py`), start to finish:
+
+**1 — The agent researches; the Guard allows moltbook**
+
+![The agent browsing moltbook.com/m/general with the live Guard feed on the desktop](docs/01-research.png)
+
+**2 — It writes a cited, multi-section brief on screen**
+
+![The agent's research brief open in a text editor, with sections and field notes](docs/02-brief.png)
+
+**3 — It tries to leave to the real twitter.com; the Guard DENIES it**
+
+![The real X / Twitter login page with a BLOCKED BY THE GUARD dialog naming the URL and reason](docs/03-blocked.png)
+
+The block is real: the agent typed the real `twitter.com/login` and reached X — but the
+navigation is off the allowlist, so the Guard refused it, showed the exact URL + reason, and
+pulled the agent back to moltbook. The decision is in the audit log:
+`[00:54:33] visit twitter.com BLOCKED (off moltbook - ...)`.
+
 ## Quickstart — try the Guard in 5 seconds, no keys
 
 The Guard is pure Python. See it allow, block, and audit with **no API keys, no Solari
