@@ -133,8 +133,8 @@ Policy(
 - **Every** decision is recorded: `[00:54:33] visit twitter.com BLOCKED (off moltbook …)`, and
   the same line is appended to `runs/*_audit.jsonl` — a receipt of exactly what the agent did.
 
-`guard.py` is pure and dependency-free on purpose, and unit-tested with **no** agent, browser,
-or model (`test_guard.py`). A rule you can prove beats a model you can only hope about.
+`guard.py` is pure and dependency-free on purpose, and unit-tested (see [Tests](#tests)).
+A rule you can prove beats a model you can only hope about.
 
 ## The demo — `run_moltbook_live.py`
 
