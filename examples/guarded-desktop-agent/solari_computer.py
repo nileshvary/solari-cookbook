@@ -156,13 +156,13 @@ class SolariComputer:
 
     async def preview_and_go(self, url: str, dwell: float = 2.4) -> None:
         """The agent types the URL itself AND navigates, then waits `dwell` seconds
-        so the REAL destination is briefly visible on camera — before the Guard's
+        so the REAL destination is briefly visible on screen — before the Guard's
         denial is enforced (the caller returns the agent to the approved site)."""
         await self._d.mouse.click(660, 430, humanize=True)
         await asyncio.sleep(0.3)
         await self._d.keyboard.press("F6")
         await asyncio.sleep(0.3)
-        await self._d.keyboard.type(url)   # typed character by character, on camera
+        await self._d.keyboard.type(url)   # typed character by character, on screen
         await asyncio.sleep(0.5)
         await self._d.keyboard.press("Return")
         await asyncio.sleep(dwell)          # the real site shows for a moment

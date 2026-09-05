@@ -11,7 +11,7 @@ desktop VM — it perceives the screen, decides its own next move, and acts. In 
 action sits a **Guard**: a small, un-trickable allowlist that decides whether the agent may
 visit a site or save a file, streams each decision to a live on-screen feed, and writes a
 tamper-evident audit log. When the agent tries to step off the approved site, the Guard
-**denies it on camera** — with the exact URL and reason — and pulls the agent back.
+**blocks it** — showing the exact URL and reason — and pulls the agent back.
 
 > **Design principle:** the agent (a model) is the fallible part; the Guard (a rule) is the
 > provable part. Security lives in the boundary around what the agent may *do*, not in the
